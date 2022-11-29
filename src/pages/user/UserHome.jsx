@@ -3,6 +3,7 @@ import Navbar from "../../components/Navbar";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import React from "react";
 import axios from 'axios';
 
@@ -25,113 +26,6 @@ export default function UserHome() {
         }
 
         getData();
-
-        // setData([
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        //     {
-        //         title: "Airport Technology System",
-        //         requirements: [
-        //             "Ilmu Komputer",
-        //             "Teknologi Informasi",
-        //             "Teknik Komputer"
-        //         ]
-        //     },
-        // ])
 
     }, []);
 
@@ -160,7 +54,7 @@ export default function UserHome() {
                     {
                         data.map((e, i) => {
                             if (i >= currentPage && i < currentPage + maxPerPage) return (
-                                <div key={i} className="mt-5 bg-white rounded-xl p-16 w-fit h-48 flex flex-col justify-center min-w-[25vw]">
+                                <div key={i} className="mt-5 bg-white rounded-xl p-16 w-24 h-52 flex flex-col justify-center min-w-[25vw]">
                                     <h2 class="mb-2 text-lg font-semibold text-[#35A5D9]">{e.title}</h2>
                                     <ul class="space-y-1 max-w-md list-disc list-inside text-gray-500">
                                         {
@@ -178,12 +72,12 @@ export default function UserHome() {
                     }
                 </div>
 
-                <div className="flex w-full items-end justify-end ">
-                    <div className="flex gap-1">
+                <div className="flex w-full items-end justify-end">
+                    <div className="mt-7 flex gap-2">
                         <button className="border rounded w-6 h-6 flex items-center justify-center hover:bg-blue-500" onClick={() => {
                             if (currentPage >= maxPerPage) setCurrentPage(currentPage - maxPerPage)
                         }
-                        }></button>
+                        }><BsChevronLeft /></button>
                         {
                             data.map((_e, i) => {
 
@@ -200,7 +94,7 @@ export default function UserHome() {
                         <button className="border rounded w-6 h-6 flex items-center justify-center hover:bg-blue-500" onClick={() => {
                             if (currentPage < data.length - 1) setCurrentPage(currentPage + maxPerPage)
                         }
-                        }></button>
+                        }><BsChevronRight /></button>
                     </div>
                 </div>
             </div>

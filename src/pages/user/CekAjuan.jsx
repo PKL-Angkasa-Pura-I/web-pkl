@@ -47,54 +47,56 @@ export default function CekAjuan() {
             </div>
 
             {submission &&
-                <div>
-                    <table>
+                <div className="flex flex-col items-center justify-center">
+                    <table className='p-5 text-left'>
                         <tr>
-                            <th>Kode Registrasi :</th>
-                            <td>{submission.code_submission}</td>
+                            <th className="w-64">Kode Registrasi</th>
+                            <td>: {submission.code_submission}</td>
                         </tr>
                         <tr>
-                            <th>Nama :</th>
-                            <td>{submission.name}</td>
+                            <th>Nama</th>
+                            <td>: {submission.name}</td>
                         </tr>
                         <tr>
-                            <th>Asal Sekolah :</th>
-                            <td>{submission.school_origin}</td>
+                            <th>Asal Sekolah</th>
+                            <td>: {submission.school_origin}</td>
                         </tr>
                         <tr>
-                            <th>Jumlah Peserta :</th>
-                            <td>{submission.total_trainee}</td>
+                            <th>Jumlah Peserta</th>
+                            <td>: {submission.total_trainee}</td>
                         </tr>
                         <tr>
-                            <th>Tanggal Mulai :</th>
-                            <td>{formatDate(new Date(submission.start_date))}</td>
+                            <th>Tanggal Mulai</th>
+                            <td>: {formatDate(new Date(submission.start_date))}</td>
                         </tr>
                         <tr>
-                            <th>Tanggal Selesai :</th>
-                            <td>{formatDate(new Date(submission.end_date))}</td>
+                            <th>Tanggal Selesai</th>
+                            <td>: {formatDate(new Date(submission.end_date))}</td>
                         </tr>
                         <tr>
-                            <th>Nama Divisi :</th>
-                            <td>{submission.division.name}</td>
+                            <th>Nama Divisi</th>
+                            <td>: {submission.division.name}</td>
                         </tr>
                         <tr>
-                            <th>Status :</th>
-                            <td>{submission.status}</td>
+                            <th>Status</th>
+                            <td>: {submission.status}</td>
                         </tr>
                     </table>
                 </div>}
 
             {/* Menampilkan button download ketika diterima & ditolak */}
             {submission && (submission.status == 'Diterima' || submission.status == 'Ditolak') &&
-                <div>
+                <div className="flex flex-col items-center justify-center">
                     <a href={`${process.env.REACT_APP_API_HOST}/${submission.respon_path_file.replace('../','')}`}>
                         <Button text={"Download Surat Balasan"} className="mt-7 w-60 rounded-md bg-[#35A5D9] hover:bg-[#E7F7FF] hover:text-[#35A5D9] font-normal" />
                     </a>
                 </div>}
 
             {submission && submission.status == 'Diterima' &&
-                <div>
-                    <iframe src="https://drive.google.com/file/d/136FaOdxqYUvULQWv-RHFbfKHLOiKIeyf/preview" width="640" height="480" allow="autoplay"></iframe>
+                <div className="mt-8 px-32 py-12 bg-[#F3FBFF] flex flex-col items-center justify-center">
+                    <b className="mt-5 mb-5 text-4xl text-[#35A5D9]">Tata Cara Pengisian Formulir PKL</b>
+                    <span className="text-center px-32">Silahkan download berkas PKL melalui link <a className="text-[#35A5D9] hover:underline" href="https://drive.google.com/file/d/1OndKicGGXx7eTpa1UYvywZbJ5nAQ5lO1/view?usp=drivesdk">berikut</a>. Selanjutnya silahkan tonton video berikut untuk mengetahui tata cara pengisian formulir PKL di PT. Angkasa Pura I Bandara Juanda Surabaya : </span>
+                    <iframe src="https://drive.google.com/file/d/136FaOdxqYUvULQWv-RHFbfKHLOiKIeyf/preview" width="640" height="480" allow="autoplay" className="mt-9"></iframe>
                 </div>}
 
             <Footer />
