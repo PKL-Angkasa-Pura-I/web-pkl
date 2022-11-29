@@ -1,7 +1,11 @@
 import React from 'react';
 import Button from '../../../components/Button';
 
-const FormTrainee = props => {
+const FormTrainee = () => {
+    const codeSubmission = localStorage.getItem('code_submission');
+    const jumlahAnggota = localStorage.getItem('jumlah_anggota');
+    console.log(codeSubmission);
+
     const RenderForm = () => {
         return (
             <>
@@ -44,7 +48,7 @@ const FormTrainee = props => {
                     rows.push(<RenderForm key={i} />);
                 }
                 return rows;
-            })([], 0, props.jumlahAnggota)}
+            })([], 0, jumlahAnggota)}
 
             <Button text={"Submit"} onClick={() => { }} className="mt-12 w-[40rem] rounded-md bg-[#35A5D9] hover:bg-[#E7F7FF] hover:text-[#35A5D9] font-normal" />
         </div>

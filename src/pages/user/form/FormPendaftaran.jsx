@@ -53,6 +53,10 @@ const FormPendaftaran = props => {
         )
             .then(function (response) {
                 // handle success
+                localStorage.setItem('code_submission', response.data.code_submission);
+                localStorage.setItem('jumlah_anggota', values.total_trainee);
+                props.showPendaftaran(false);
+                props.showTrainee(true);
                 console.log('axios', response);
             })
             .catch(function (error) {
