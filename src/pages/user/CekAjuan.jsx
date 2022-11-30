@@ -6,9 +6,9 @@ import React from "react";
 import axios from 'axios';
 
 function formatDate(d) {
-    const month = '' + (d.getMonth() + 1);
-    const day = '' + d.getDate();
-    const year = d.getFullYear();
+    var month = '' + (d.getMonth() + 1);
+    var day = '' + d.getDate();
+    var year = d.getFullYear();
 
     if (month.length < 2)
         month = '0' + month;
