@@ -3,10 +3,6 @@ import Button from '../../../components/Button';
 import axios from 'axios';
 
 const FormPendaftaran = props => {
-    // const nextSection = () => {
-    //     props.showPendaftaran(false);
-    //     props.showTrainee(true);
-    // }
 
     const [values, setValues] = React.useState({
         name: '',

@@ -87,7 +87,7 @@ export default function CekAjuan() {
             {/* Menampilkan button download ketika diterima & ditolak */}
             {submission && (submission.status == 'Diterima' || submission.status == 'Ditolak') &&
                 <div className="flex flex-col items-center justify-center">
-                    <a href={`${process.env.REACT_APP_API_HOST}/${submission.respon_path_file.replace('../','')}`}>
+                    <a href={`${process.env.REACT_APP_API_HOST}/submissions/${submission.code_submission}/download/respon`}>
                         <Button text={"Download Surat Balasan"} className="mt-7 w-60 rounded-md bg-[#35A5D9] hover:bg-[#E7F7FF] hover:text-[#35A5D9] font-normal" />
                     </a>
                 </div>}
