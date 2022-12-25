@@ -6,6 +6,7 @@ import { useTable } from "react-table";
 import Modal from "react-modal";
 import { CiEdit } from "react-icons/ci";
 import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai";
 import { loginCheck } from "../utils";
 import axios from "axios";
 import { useRef } from "react";
@@ -114,9 +115,9 @@ export default function Editkuota() {
   useEffect(() => {
     loginCheck();
     setUserInfo({
-      Photo: "AP-logo-1.png",
-      name: "Hasan Nursalim",
-      department: "General Manager",
+      Photo: "/AP logo 1.png",
+      name: "",
+      department: "",
     });
     populate();
     // getPairOfDivisionAndBidangKeahlian()
@@ -492,7 +493,7 @@ export default function Editkuota() {
                                     });
                                 }}
                               >
-                                Hapus
+                                <AiOutlineDelete className="text-2xl" />
                               </button>
                             </td>
                           </tr>

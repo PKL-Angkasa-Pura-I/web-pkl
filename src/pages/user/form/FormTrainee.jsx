@@ -109,6 +109,7 @@ const FormTrainee = () => {
         )
             .then(function (response) {
                 // handle success
+                alert("Selamat anda telah berhasil terdaftar, silahkan simpan kode registrasi berikut : " + codeSubmission);
                 console.log('axios', response);
                 navigate("/cekajuan");
             })

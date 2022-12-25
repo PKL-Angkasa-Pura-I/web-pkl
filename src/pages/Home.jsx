@@ -18,20 +18,92 @@ import {
   import { Chart } from 'react-chartjs-2';
 import { useNavigate } from "react-router-dom";
 import { loginCheck } from "../utils";
+import axios from "axios";
 
 export default function Home () {
 
     const [ userInfo, setUserInfo ] = useState();
+    const [ data, setData ] = useState([]);
+    const [ chartLabels, setChartLabels ] = useState([]);
+    const [ chartValuesKuota, setChartValuesKuota ] = useState([]);
+    const [ chartValuesPendaftar, setChartValuesPendaftar ] = useState([]);
+    const [ month, setMonth ] = useState(new Date().getMonth());
 
-    
+    function filteredList() {
+      if(month > 0 && month < 13) {
+        axios.get(`${process.env.REACT_APP_API_HOST}/submissions`)
+        .then((response) => {
+          let accepted = response.data.submission.filter((e) => {
+            if(e.status == "Diterima") {
+              let dateStart = new Date(e.start_date);
+              let dateEnd = new Date(e.end_date);
+              let now = new Date(new Date().getFullYear()+"-"+month+"-01");
+              // console.log(new Date().getFullYear()+"-"+month+"-01")
+              if(now.getFullYear() >= dateStart.getFullYear() && now.getFullYear() <= dateEnd.getFullYear()) {
+                if(now.getMonth() >= dateStart.getMonth() && now.getMonth() <= dateEnd.getMonth()) {
+                  return e;
+                }
+              }
+              
+              // if(now >= dateStart && now <= dateEnd) {
+              //   return e;
+              // }
+            }
+          })
+          setData(accepted)
+          // console.log(accepted)
+        })
+      } else {
+        getAllSubmissions()
+      }
+    }
+
+    function getAllSubmissions() {
+      axios.get(`${process.env.REACT_APP_API_HOST}/submissions`)
+        .then((response) => {
+          let accepted = response.data.submission.filter((e) => {
+            return e.status == "Diterima"
+          })
+          setData(accepted)
+          console.log(accepted)
+
+        })
+    }
+
+    function handleMonthChange(e) {
+      if(month != "*") setMonth(Number.parseInt(e))
+      else getAllSubmissions()
+    }
+
+    useEffect(() => {
+      filteredList()
+    }, [month])
 
     useEffect(() => {
         loginCheck();
         setUserInfo({
-            Photo: "/AP-logo-1.png", 
-            name: "Hasan Nursalim",
-            department: "General Manager"
+            Photo: "/AP logo 1.png", 
+            name: "",
+            department: ""
         });
+        // setMonth(Number.parseInt(new Date().getMonth()))
+        // getAllSubmissions()
+
+        axios.get(`${process.env.REACT_APP_API_HOST}/charts/all_division`)
+        .then((res) => {
+          let labels = []
+          let quota = []
+          let acc = []
+          res.data.division.forEach((e) => {
+            labels.push(e.name)
+            quota.push(e.quota)
+            acc.push(e.total)
+            // console.log(e)
+          })
+          setChartLabels(labels)
+          setChartValuesKuota(quota)
+          setChartValuesPendaftar(acc)
+        })
     }, []);
 
     let ddopt = [
@@ -89,71 +161,23 @@ export default function Home () {
         () => [
           {
             Header: 'No Registrasi',
-            accessor: 'regis',
+            accessor: 'code_submission',
           },
           {
             Header: 'Nama',
-            accessor: 'nama', // accessor is the "key" in the data
+            accessor: 'name', // accessor is the "key" in the data
           },
           {
             Header: 'Unit Kerja',
-            accessor: 'unit',
+            accessor: 'division',
           },
           {
             Header: 'Asal Sekolah / Universitas',
-            accessor: 'asal',
+            accessor: 'school_origin',
           },
           {
             Header: 'Status',
             accessor: 'status',
-          },
-        ],
-        []
-      )
-
-      const data = React.useMemo(
-        () => [
-          {
-            regis: 'AP121',
-            nama: 'Dio Farrel',
-            unit: 'AIRPORT TECHNOLOGY SECTION',
-            asal: 'UPN Veteran Jawa Timur',
-            status: 'November - Januari'
-          },
-          {
-            regis: 'AP122',
-            nama: 'Galih Arum Prabowo',
-            unit: 'AIRPORT TECHNOLOGY SECTION',
-            asal: 'UPN Veteran Jawa Timur',
-            status: 'November - Januari'
-          },
-          {
-            regis: 'AP121',
-            nama: 'Dio Farrel',
-            unit: 'AIRPORT TECHNOLOGY SECTION',
-            asal: 'UPN Veteran Jawa Timur',
-            status: 'November - Januari'
-          },
-          {
-            regis: 'AP122',
-            nama: 'Galih Arum Prabowo',
-            unit: 'AIRPORT TECHNOLOGY SECTION',
-            asal: 'UPN Veteran Jawa Timur',
-            status: 'November - Januari'
-          },
-          {
-            regis: 'AP121',
-            nama: 'Dio Farrel',
-            unit: 'AIRPORT TECHNOLOGY SECTION',
-            asal: 'UPN Veteran Jawa Timur',
-            status: 'November - Januari'
-          },
-          {
-            regis: 'AP122',
-            nama: 'Galih Arum Prabowo',
-            unit: 'AIRPORT TECHNOLOGY SECTION',
-            asal: 'UPN Veteran Jawa Timur',
-            status: 'November - Januari'
           },
         ],
         []
@@ -178,6 +202,29 @@ export default function Home () {
         LineController,
         BarController
       );
+
+      const labels = ['STAKEHOLDER RELATION', 'OPERATION AIR SIDE', 'OPERATION LANDSIDE AND TERMINAL', 'SERVICE IMPROVEMEN', 'RESCUE AND FIRE FIGHTING', 'SECURITY PROTECTION', 'SECURITY SCREENING', 'AIRSIDE FACILITIES', 'LANDSIDE FACILITIES','AIRPORT EQUIPMENT','AIRPORT TECHNOLOGY','AIRPORT AERONAUTICAL','AIRPORT NON AERONAUTICAL TERMINAL 1','AIRPORT NON AERONAUTICAL TERMINAL 2','FINANCE SECTION', 'ACCOUNTING SECTION', 'HUMAN CAPITAL BUSINESS PARTNER', 'GENERAL SERVICES'];
+      const chartdata = {
+          labels: chartLabels,
+          datasets: [
+            {
+              type: 'line',
+              label: 'Kuota',
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 2,
+              fill: false,
+              data: chartValuesKuota,
+            },
+            {
+              type: 'bar',
+              label: 'Jumlah Pendaftar Diterima',
+              backgroundColor: 'rgb(75, 192, 192)',
+              data: chartValuesPendaftar,
+              borderColor: 'white',
+              borderWidth: 2,
+            },
+          ],
+        };
       
 
     return (
@@ -199,7 +246,7 @@ export default function Home () {
                         <div className="bg-white rounded-xl p-5 flex flex-col items-start flex-grow gap-1">
                             <b className="text-2xl">Halo {userInfo.name.split(" ")[0]}!</b>
                             <span className="text-slate-600">Selamat datang kembali!</span>
-                            <Searchbar useDropdown={true} dropdownOptions={ddopt} className="mt-5" />
+                            <Searchbar useDropdown={true} dropdownOptions={ddopt} className="mt-5" onMonthChange={handleMonthChange} />
                         </div>
                     </div>
                     <div className="flex flex-row gap-3">
@@ -227,6 +274,7 @@ export default function Home () {
                                 <tbody {...getTableBodyProps()}>
                                 {// Loop over the table rows
                                 rows.map(row => {
+                                  row.values.division = row.original.division.name
                                     // Prepare the row for display
                                     prepareRow(row)
                                     return (
@@ -256,25 +304,3 @@ export default function Home () {
         </div>
     )
 }
-const labels = ['STAKEHOLDER RELATION', 'OPERATION AIR SIDE', 'OPERATION LANDSIDE AND TERMINAL', 'SERVICE IMPROVEMEN', 'RESCUE AND FIRE FIGHTING', 'SECURITY PROTECTION', 'SECURITY SCREENING', 'AIRSIDE FACILITIES', 'LANDSIDE FACILITIES','AIRPORT EQUIPMENT','AIRPORT TECHNOLOGY','AIRPORT AERONAUTICAL','AIRPORT NON AERONAUTICAL TERMINAL 1','AIRPORT NON AERONAUTICAL TERMINAL 2','FINANCE SECTION', 'ACCOUNTING SECTION', 'HUMAN CAPITAL BUSINESS PARTNER', 'GENERAL SERVICES'];
-export const chartdata = {
-    labels,
-    datasets: [
-      {
-        type: 'line',
-        label: 'Kuota',
-        borderColor: 'rgb(255, 99, 132)',
-        borderWidth: 2,
-        fill: false,
-        data: [3, 4, 4, 5, 3, 2, 5, 8, 5, 2, 4, 6, 4, 3, 2, 4, 3, 5],
-      },
-      {
-        type: 'bar',
-        label: 'Jumlah Pendaftar',
-        backgroundColor: 'rgb(75, 192, 192)',
-        data: [5, 7, 4, 3, 5, 4, 3, 5, 7, 4, 3, 5, 4, 3, 5, 8, 5, 6],
-        borderColor: 'white',
-        borderWidth: 2,
-      },
-    ],
-  };

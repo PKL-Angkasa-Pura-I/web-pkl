@@ -6,7 +6,8 @@ import { useTable } from "react-table"
 import Table from "../components/Table";
 import { loginCheck } from "../utils";
 import axios from "axios";
-
+import { DownloadTableExcel, downloadExcel } from 'react-export-table-to-excel';
+import { useRef } from "react";
 
 
   
@@ -15,63 +16,67 @@ import axios from "axios";
 export default function Pengajuan () {
 
     const [ userInfo, setUserInfo ] = useState();
-    const [ data, setData ] = useState();
-    const [ active, setActive ] = useState("proses");
+    const [ data, setData ] = useState([]);
+    const [ active, setActive ] = useState("Diproses");
     // const [ submissions, setSubmissions ] = useState([]);
+
+    const tableRef = React.createRef()
 
     useEffect(() => {
       loginCheck ()
         setUserInfo({
-            Photo: "AP-logo-1.png", 
-            name: "Hasan Nursalim",
-            department: "General Manager"
+            Photo: "AP logo 1.png", 
+            name: "",
+            department: ""
         });
 
+        console.log("ref", tableRef.current)
         
         axios
           .get(`${process.env.REACT_APP_API_HOST}/submissions`)
           .then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
+            setData(response.data.submission)
           })
           .catch(console.error)
         
     }, []);
 
-    useEffect(() => {
-      if(active === "proses") {
-        setData([
-          {
-            regis: 'AP121',
-            nama: 'Dio Farrel',  
-            jumlah: '3',
-            tanggal: '24-10-2022, 12.43',  
-            unit: 'Teknologi Informasi & Komunikasi',
-            bulan: 'November - Januari',
-          },
-          {
-            regis: 'AP122',
-            nama: 'Galih Arum',  
-            jumlah: '4',
-            tanggal: '24-10-2022, 12.44',  
-            unit: 'Teknologi Informasi & Komunikasi',
-            bulan: 'November',
-          },
-        ]) 
-      } else if(active === "diterima") {
-        setData([
-          {
-            regis: 'AP121',
-            nama: 'Dio Farrel',  
-            jumlah: '3',
-            tanggal: '24-10-2022, 12.43',  
-            unit: 'Teknologi Informasi & Komunikasi',
-            bulan: 'November - Januari',
-          },
-        ]) 
-      } else {
-        setData([])
-      }
-    }, [active])
+    // useEffect(() => {
+    //   if(active === "proses") {
+    //     setData([
+    //       {
+    //         regis: 'AP121',
+    //         nama: 'Dio Farrel',  
+    //         jumlah: '3',
+    //         tanggal: '24-10-2022, 12.43',  
+    //         unit: 'Teknologi Informasi & Komunikasi',
+    //         bulan: 'November - Januari',
+    //       },
+    //       {
+    //         regis: 'AP122',
+    //         nama: 'Galih Arum',  
+    //         jumlah: '4',
+    //         tanggal: '24-10-2022, 12.44',  
+    //         unit: 'Teknologi Informasi & Komunikasi',
+    //         bulan: 'November',
+    //       },
+    //     ]) 
+    //   } else if(active === "diterima") {
+    //     setData([
+    //       {
+    //         regis: 'AP121',
+    //         nama: 'Dio Farrel',  
+    //         jumlah: '3',
+    //         tanggal: '24-10-2022, 12.43',  
+    //         unit: 'Teknologi Informasi & Komunikasi',
+    //         bulan: 'November - Januari',
+    //       },
+    //     ]) 
+    //   } else {
+    //     setData([])
+    //   }
+    // }, [active])
 
     let ddopt = [
       {
@@ -127,7 +132,30 @@ export default function Pengajuan () {
     let subtitle;
   const [setIsOpen] = React.useState(false);
 
-      
+    function handleExport() {
+        const month = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"]
+        let exportData = [];
+        for(let i = 0; i< data.length; ++i) {
+            let dt = new Date(data[i].created_at)
+            exportData.push({
+                code_submission: data[i].code_submission,
+                name: data[i].name,
+                total_trainee: data[i].total_trainee,
+                created_at: `${dt.getDate()} ${month[dt.getMonth()]} ${dt.getFullYear()}`,
+                division: data[i].division.name,
+                month: `${month[new Date(data[i].start_date).getMonth()]} - ${month[new Date(data[i].end_date).getMonth()]}`,
+                status: data[i].status
+            })
+        }
+        downloadExcel({
+            fileName: `pengajuan_${new Date().getTime()}`,
+            sheet: "Pengajuan",
+            tablePayload: {
+                header: ["No. Registrasi", "Nama", "Jumlah", "Tanngal Pengajuan", "Unit Kerja", "Bulan", "Status"],
+                body: exportData
+            }
+        })
+    }
 
       
 
@@ -152,18 +180,24 @@ export default function Pengajuan () {
                     
                     <div className="flex flex-col gap-3">
                         <div className="bg-white rounded-xl p-5 flex flex-col items-start h-48 gap-1">
-                              <b className="text-2xl">Halo {userInfo.name.split(" ")[0]}!</b>
-                              <span className="text-slate-600">Selamat datang kembali!</span>
-                              <Searchbar useDropdown={true} dropdownOptions={ddopt} className="mt-5" />
+                            <div className="flex justify-between w-full">
+                                <div className="flex flex-col gap-1">
+                                    <b className="text-2xl">Halo {userInfo.name.split(" ")[0]}!</b>
+                                    <span className="text-slate-600">Selamat datang kembali!</span>
+                                </div>
+                                <button onClick={handleExport} className="bg-blue-600 rounded-lg text-white px-3 py-1 h-fit">Export</button>
+                            </div>
+                            <Searchbar useDropdown={true} dropdownOptions={ddopt} className="mt-5" />
+                            
                         </div>
-                        <div className="bg-white rounded-xl min-h-[500px]">
+                        <div className="bg-white rounded-xl h-[500px]">
                           <div className="flex flex-row justify-around">
-                            <button className={`py-4 w-full ${active === "proses" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("proses")}>Proses</button>
-                            <button className={`py-4 w-full ${active === "diterima" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("diterima")}>Diterima</button>
-                            <button className={`py-4 w-full ${active === "ditolak" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("ditolak")}>Ditolak</button>
-                            <button className={`py-4 w-full ${active === "dibatalkan" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("dibatalkan")}>Dibatalkan</button>
+                            <button className={`py-4 w-full ${active === "Diproses" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("Diproses")}>Proses</button>
+                            <button className={`py-4 w-full ${active === "Diterima" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("Diterima")}>Diterima</button>
+                            <button className={`py-4 w-full ${active === "Ditolak" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("Ditolak")}>Ditolak</button>
+                            <button className={`py-4 w-full ${active === "Dibatalkan" ? "border-gray-600 border-b-4" : ""}`} onClick={()=>setActive("Dibatalkan")}>Dibatalkan</button>
                           </div>
-                          <Table data={data} />
+                          <Table className="bg-white rounded-xl overflow-y-auto max-h-[300px]" data={data} ref={tableRef} active={active} />
                         </div>
                     </div>
                 </div>

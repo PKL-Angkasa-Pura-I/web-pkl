@@ -38,12 +38,14 @@ export default function TambahPengjuan () {
     const navigate = useNavigate();
 
     const [ userInfo, setUserInfo ] = useState();
+    const [ divisions, setDivisions ] = useState([]);
+    const [ division, setDivision ] = useState();
+    const [ studyFields, setStudyFields ] = useState([]);
 
     const inputName = useRef();
     const inputEmail = useRef();
     const inputSchool = useRef();
     const inputStudyField = useRef();
-    const inputDivision = useRef();
     const inputStartDate = useRef();
     const inputEndDate = useRef();
     const inputTraineeCount = useRef();
@@ -51,20 +53,42 @@ export default function TambahPengjuan () {
     useEffect(() => {
         loginCheck ()
         setUserInfo({
-            Photo: "AP-logo-1.png", 
-            name: "Hasan Nursalim",
-            department: "General Manager"
+            Photo: "AP logo 1.png", 
+            name: "",
+            department: ""
         });
 
-        // localStorage.setItem("form-pengajuan", JSON.stringify({
-        //     nama: "Dio Farrel",
-        //     nim: "101010"
-        // }))
+        axios.get(`${process.env.REACT_APP_API_HOST}/list_division_fields`)
+        .then((response) => {
+            console.log(response.data.data)
+            setDivisions(response.data.data)
+        })
 
-        // alert(localStorage.getItem("form-pengajuan"))
-
-        // localStorage.removeItem("form-pengajuan")
     }, []);
+
+    const changeDivision = (e) => {
+        setDivision(e.currentTarget.value)
+        let bk = []
+        for(let i = 0; i < divisions.length; ++i) {
+            if(divisions[i].id == Number.parseInt(e.currentTarget.value)) {
+                for(let j = 0; j < divisions[i].list_study_field.length; ++j) {
+                    bk.push({
+                        id: divisions[i].list_study_field_id[j],
+                        value: divisions[i].list_study_field[j]
+                    })
+                }
+                break;
+            }
+        }
+        setStudyFields(bk)
+        // console.log(divisions, bk)
+        // const bk = divisions.filter((el) => {
+        //     return el.id === Number.parseInt(e.currentTarget.value)
+        // })
+        // setStudyFields(bk[0].list_study_field)
+        // console.log(bk[0].list_study_field)
+        // console.log(studyFields)
+    }
 
     function submit() {
         let formData = new FormData();
@@ -74,7 +98,7 @@ export default function TambahPengjuan () {
         formData.append("email", inputEmail.current.value);
         formData.append("school_origin", inputSchool.current.value);
         formData.append("total_trainee", Number.parseInt(inputTraineeCount.current.value));
-        formData.append("division_id", Number.parseInt(inputDivision.current.value));
+        formData.append("division_id", Number.parseInt(division));
         formData.append("study_field_id", Number.parseInt(inputStudyField.current.value));
         formData.append("start_date", new Date(inputStartDate.current.value).toISOString());
         formData.append("end_date", new Date(inputEndDate.current.value).toISOString());
@@ -83,8 +107,12 @@ export default function TambahPengjuan () {
         axios
             .post(`${process.env.REACT_APP_API_HOST}/submissions`, formData)
             .then((response) => {
-                console.log(response)
-                navigate("/Form")
+                console.log(response.data.code_submission)
+                sessionStorage.setItem(response.data.code_submission, JSON.stringify({
+                    name: inputName.current.value,
+                    email: inputEmail.current.value
+                }))
+                navigate("/Form/"+response.data.code_submission)
             })
             .catch(console.error)
         
@@ -125,13 +153,36 @@ export default function TambahPengjuan () {
                             <input className="border-2 w-4/6 border-slate-400 rounded-xl px-3 text-slate-400" ref={inputSchool} />
                             </div>
                             <div>
-                            <div>Bidang Keilmuan</div>
-                            <input className="border-2 w-4/6 border-slate-400 rounded-xl px-3 text-slate-400" ref={inputStudyField} />
-                            </div>
-                            <div>
                             <div>Unit Kerja</div>
-                            <input className="border-2 w-4/6 border-slate-400 rounded-xl px-3 text-slate-400" ref={inputDivision} />
+                            <select name="" id="" className="border-2 w-4/6 border-slate-400 rounded-xl px-3 text-slate-400" onChange={changeDivision}>
+                                <option value="">Pilih unit kerja</option>
+                                {
+                                    divisions.map((e, i) => {
+                                        return (
+                                            <option value={e.id} key={i}>
+                                                {e.division_name}
+                                            </option>
+                                        )
+                                    })
+                                }
+                            </select>
+                            
                             </div>
+                            {
+                                division ?
+                                <div>
+                                    <div>Bidang Keilmuan</div>
+                                    <select name="" id="" className="border-2 w-4/6 border-slate-400 rounded-xl px-3 text-slate-400"  ref={inputStudyField}>
+                                        <option value="">Pilih bidang keahlian</option>
+                                        {
+                                            studyFields.map((e, i) => {
+                                                return <option value={e.id} key={i}>{e.value}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                : ""
+                            }
                             <div>
                             <div>Tanggal Mulai</div>
                             <input type="date" className="border-2 w-4/6 border-slate-400 rounded-xl px-3 text-slate-400" ref={inputStartDate} />

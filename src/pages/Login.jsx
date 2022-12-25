@@ -43,7 +43,7 @@ export default function Login () {
             </Helmet>
             <div className="bg-[#87C9E9] w-screen h-screen flex items-center justify-center ">
                 <div className="bg-white w-[500px] h-[600px] flex flex-col items-center py-20 gap-6">
-                    <img src="/AP-logo-1.png" alt="Logo" width={200} />
+                    <img src="/AP logo 1.png" alt="Logo" width={200} />
                     <div className="font-bold text-3xl text-center">
                         <b>Welcome to<br />Dashboard Admin</b>
                     </div>

@@ -18,6 +18,11 @@ export default function Sidebar({active, className}) {
             icon: <AiOutlineEdit className="text-2xl py-1" />
         },
         {
+            text: "B. Keahlian",
+            address: "/editBidangKeahlian",
+            icon: <AiOutlineEdit className="text-2xl py-1" />
+        },
+        {
             text: "Pengajuan",
             address: "/pengajuan",
             icon: <AiOutlineUserAdd className="text-2xl py-1" />
@@ -45,7 +50,7 @@ export default function Sidebar({active, className}) {
                 }
                 </div>
                 <div className="flex flex-col gap-1">
-                    <Link to="/settings" className={`hover:bg-sky-200 hover:text-sky-800 px-4 py-2 rounded-lg flex items-center ${active === "Settings"? "bg-sky-200 text-sky-800" : ""}`}>< AiOutlineSetting className="text-2xl py-1 "/> Settings</Link>
+                    <Link to="/ChangePassword" className={`hover:bg-sky-200 hover:text-sky-800 px-4 py-2 rounded-lg flex items-center ${active === "Settings"? "bg-sky-200 text-sky-800" : ""}`}>< AiOutlineSetting className="text-2xl py-1 "/> Settings</Link>
                     <Link to="/logout" className={`hover:bg-sky-200 hover:text-sky-800 px-4 py-2 rounded-lg flex items-center ${active === "Logout" ? "bg-sky-200 text-sky-800" : ""}`}>< AiOutlineLogout className="text-2xl py-1 "/>Logout</Link>
                 </div>
             </div>
