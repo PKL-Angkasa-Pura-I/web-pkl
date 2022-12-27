@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function ChangePassword() {
 
-    const [ error, setError ] = useState([]);
+    const [error, setError] = useState([]);
 
     const password = useRef();
     const new_password = useRef();
@@ -15,7 +15,7 @@ export default function ChangePassword() {
     function onSubmit(e) {
         e.preventDefault();
 
-        if(new_password.current.value !== confirm_new_password.current.value) {
+        if (new_password.current.value !== confirm_new_password.current.value) {
             setError([
                 ...error,
                 "Password baru dan konfirmasi password baru harus sama!"
@@ -23,25 +23,25 @@ export default function ChangePassword() {
             return
         } else setError([]);
 
-        axios.post(`${process.env.REACT_APP_API_HOST}/admins/login`, {
+        axios.post(`${process.env.REACT_APP_API_HOST}/admins/passwords`, {
             old_password: password.current.value,
             new_password: new_password.current.value
         })
-        .then((response) => {
-            console.log(response.data)
-            localStorage.setItem("ap_data", JSON.stringify({
-                token: response.data.token,
-                isLoggedIn: true
-            }))
-            navigate("/admin");
-        })
-        .catch((err)=> {
-            console.error(err)
-            setError([
-                ...error,
-                "Gagal mengubah password!"
-            ]);
-        })
+            .then((response) => {
+                console.log(response.data)
+                localStorage.setItem("ap_data", JSON.stringify({
+                    token: response.data.token,
+                    isLoggedIn: true
+                }))
+                navigate("/admin");
+            })
+            .catch((err) => {
+                console.error(err)
+                setError([
+                    ...error,
+                    "Gagal mengubah password!"
+                ]);
+            })
     }
 
     return (
@@ -57,13 +57,13 @@ export default function ChangePassword() {
                     </div>
                     <form className="flex flex-col gap-4" action={onSubmit}>
                         <div className="flex flex-col gap-1 w-80 text-sm">
-                        {
-                            error.map((e, i) => {
-                                return (
-                                    <div key={i} className="bg-red-500 text-white px-3 py-1 w-full rounded-lg">{e}</div>
-                                )
-                            })
-                        }
+                            {
+                                error.map((e, i) => {
+                                    return (
+                                        <div key={i} className="bg-red-500 text-white px-3 py-1 w-full rounded-lg">{e}</div>
+                                    )
+                                })
+                            }
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor="Password">
@@ -90,6 +90,6 @@ export default function ChangePassword() {
 
                 </div>
             </div>
-        </div>        
+        </div>
     )
 }
