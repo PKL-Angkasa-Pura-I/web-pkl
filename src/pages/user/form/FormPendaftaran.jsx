@@ -57,19 +57,22 @@ const FormPendaftaran = props => {
             })
             .catch(function (error) {
                 // handle error
+                alert(error);
                 console.log(error);
             });
     }
 
     return (
         <div className="mt-12 mb-24 flex flex-col items-center">
+            <b className="mt-5 mb-5 text-3xl text-[#35A5D9]">Data Kelompok</b>
+
             <form onSubmit={handleSubmit}>
                 <div className="mt-4">
-                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
+                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Nama (Ketua Kelompok)</label>
                     <input onChange={handleChange('name')} value={values.name} type="text" id="base-input" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5" />
                 </div>
                 <div className="mt-4">
-                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Email (Ketua Kelompok)</label>
                     <input onChange={handleChange('email')} value={values.email} type="text" id="base-input" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5" />
                 </div>
                 <div className="mt-4">
@@ -77,7 +80,7 @@ const FormPendaftaran = props => {
                     <input onChange={handleChange('school_origin')} value={values.school_origin} type="text" id="base-input" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5" />
                 </div>
                 <div className="mt-4">
-                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Jumlah Anggota</label>
+                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Jumlah Anggota (Termasuk Ketua)</label>
                     <input type="text" onChange={handleChange('total_trainee')} value={values.total_trainee} id="base-input" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5" />
                 </div>
                 <div className="mt-4">
@@ -106,7 +109,7 @@ const FormPendaftaran = props => {
                 </div>
 
                 <div className="mt-4">
-                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Upload Surat Pengantar</label>
+                    <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Upload Surat Pengantar (maksimal 2 mb)</label>
                     <input type="file" onChange={handleChangeFile} className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5" id="file" />
                 </div>
 

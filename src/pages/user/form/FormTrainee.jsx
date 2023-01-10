@@ -46,8 +46,38 @@ const FormTrainee = () => {
 
     const count = React.useRef(1);
     const clickedButton = async (event) => {
-        if (count.current <= jumlahAnggota) {
-
+        // pengecekan jika jumlah anggota = 1
+        if (jumlahAnggota == 1) {
+            await axios.post(
+                `${process.env.REACT_APP_API_HOST}/trainees/${codeSubmission}`,
+                {
+                    name: values.name,
+                    trainee_student_id: values.trainee_student_id,
+                    email: values.email,
+                    jurusan: values.jurusan,
+                    gender: values.gender,
+                    phone: values.phone
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+                .then(function (response) {
+                    // handle success
+                    alert("Selamat anda telah berhasil terdaftar, silahkan simpan kode registrasi berikut : " + codeSubmission);
+                    console.log('axios', response);
+                    navigate("/cekajuan");
+                })
+                .catch(function (error) {
+                    // handle error
+                    alert(error);
+                    console.log(error);
+                });
+        }
+        // pengecekan jika jumlah anggota lebih dari 1
+        else if (count.current <= jumlahAnggota) {
             await axios.post(
                 `${process.env.REACT_APP_API_HOST}/trainees/${codeSubmission}`,
                 {
@@ -68,7 +98,7 @@ const FormTrainee = () => {
                     // handle success
                     console.log('axios', response);
                     count.current = count.current + 1;
-                    if (count.current == jumlahAnggota) { setNext(false); setSubmit(true); }
+                    if (count.current == jumlahAnggota) { setNext(false); setSubmit(true); } // step untuk anggota terakhir
                     setValues(v => {
                         return ({
                             ...v,
@@ -83,13 +113,14 @@ const FormTrainee = () => {
                 })
                 .catch(function (error) {
                     // handle error
+                    alert(error);
                     console.log(error);
                 });
         }
     }
 
+    // submit data terakhir
     const handleSubmit = async () => {
-        // axios when clicked submit
         const formData = new FormData();
         formData.append('name', values.name);
         formData.append('trainee_student_id', values.trainee_student_id);
@@ -115,6 +146,7 @@ const FormTrainee = () => {
             })
             .catch(function (error) {
                 // handle error
+                alert(error);
                 console.log(error);
             });
     }
@@ -126,6 +158,8 @@ const FormTrainee = () => {
     return (
 
         <div className="mt-12 mb-24 flex flex-col items-center">
+
+            {count.current && <b className="mt-5 mb-5 text-3xl text-[#35A5D9]">Data Anggota {+ count.current}</b>}
 
             <div className="mt-4">
                 <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
@@ -157,7 +191,7 @@ const FormTrainee = () => {
             </div>
             <br /><br />
 
-            {next ? <Button text={"Selanjutnya"} onClick={clickedButton} className="mt-12 w-[40rem] rounded-md bg-[#35A5D9] hover:bg-[#E7F7FF] hover:text-[#35A5D9] font-normal" /> : null}
+            {next ? <Button text={"Submit"} onClick={clickedButton} className="mt-12 w-[40rem] rounded-md bg-[#35A5D9] hover:bg-[#E7F7FF] hover:text-[#35A5D9] font-normal" /> : null}
             {submit ? <Button text={"Submit"} onClick={handleSubmit} className="mt-12 w-[40rem] rounded-md bg-[#35A5D9] hover:bg-[#E7F7FF] hover:text-[#35A5D9] font-normal" /> : null}
         </div>
     );

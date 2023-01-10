@@ -9,8 +9,8 @@ import React from "react";
 import axios from "axios";
 
 export default function Pendaftaran() {
-    const [periksa, setPeriksa] = React.useState(true);
-    const [pendaftaran, setPendaftaran] = React.useState(false);
+    // const [periksa, setPeriksa] = React.useState(false);
+    const [pendaftaran, setPendaftaran] = React.useState(true);
     const [trainee, setTrainee] = React.useState(false);
     const [anggota, setAnggota] = React.useState(0);
 
@@ -61,7 +61,7 @@ export default function Pendaftaran() {
                 <span className="mt-6 text-white">Silahkan ikuti dan lengkapi formulir pendaftaran di bawah ini dan pastikan data yang kalian isikan sudah benar</span>
             </div>
 
-            {periksa ? <FormPeriksa dataKeilmuan={dataKeilmuan} dataDivisi={dataDivisi} showPendaftaran={setPendaftaran} showPeriksa={setPeriksa} /> : null}
+            {/* {periksa ? <FormPeriksa dataKeilmuan={dataKeilmuan} dataDivisi={dataDivisi} showPendaftaran={setPendaftaran} showPeriksa={setPeriksa} /> : null} */}
             {pendaftaran ? <FormPendaftaran dataKeilmuan={dataKeilmuan} dataDivisi={dataDivisi} jumlahAnggota={anggota} showPendaftaran={setPendaftaran} showTrainee={setTrainee} setAnggota={setAnggota} /> : null}
             {trainee ? <FormTrainee jumlahAnggota={anggota} /> : null}
 
