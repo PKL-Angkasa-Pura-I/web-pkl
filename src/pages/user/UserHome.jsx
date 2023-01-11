@@ -121,7 +121,7 @@ export default function UserHome() {
                     <iframe width="720" height="480" src="https://www.youtube.com/embed/eeplXFdctXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div className="mt-7">
-                    <iframe src="https://drive.google.com/file/d/136FaOdxqYUvULQWv-RHFbfKHLOiKIeyf/preview" width="640" height="480" allow="autoplay"></iframe>
+                    {/* embed the second video in here using width=720 and height 480 */}
                 </div>
             </div>
 
