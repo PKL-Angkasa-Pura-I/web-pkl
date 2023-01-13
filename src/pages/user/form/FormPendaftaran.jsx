@@ -86,6 +86,7 @@ const FormPendaftaran = props => {
                 <div className="mt-4">
                     <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Divisi</label>
                     <select id="countries" onChange={handleChange('division_id')} className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5">
+                        <option value="">Choose Option</option>
                         {props.dataDivisi?.map((val, index) => (
                             <option key={index} value={val.id}>{val.division_name}</option>
                         ))}
@@ -94,6 +95,7 @@ const FormPendaftaran = props => {
                 <div className="mt-4">
                     <label for="countries" className="block mb-2 text-sm font-medium text-gray-900">Bidang Keilmuan</label>
                     <select id="countries" onChange={handleChange('study_field_id')} className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[40rem] p-2.5">
+                        <option value="">Choose Option</option>
                         {props.dataKeilmuan?.map((val, index) => (
                             <option key={index} value={val.id}>{val.name}</option>
                         ))}
